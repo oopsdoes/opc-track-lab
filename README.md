@@ -23,7 +23,7 @@ git clone https://gh-proxy.com/https://github.com/<你的用户名>/opc-track-la
 
 判断关支持**两个原生插口 + 一个通配口**，配置三个环境变量即可，未配置时自动降级「单阅卷」（AI 自判并在卡片标注），**流程永不阻塞**。
 
-> 说明：本博主的亲测路线是**插口 A（OpenRouter）**——注册有送额度活动、国内配置成本最低；插口 B/C 均已适配协议但未逐一实测。如果你发现了更好的判卷渠道（更便宜、更快、更稳，或本地 Laya 跑通了），**欢迎提 Issue 或 PR** 分享配置，我会把它加进这份说明里。
+> 说明：亲测路线是**插口 A（OpenRouter）**——注册有送额度活动、国内配置成本最低；插口 B/C 均已适配协议但未逐一实测。如果发现了更好的判卷渠道（更便宜、更快、更稳，或本地 Laya 跑通了），**欢迎提 Issue 或 PR** 分享配置，我会把它加进这份说明里。
 
 ### 插口 A · OpenRouter（推荐，本仓库实测路线）
 
@@ -99,5 +99,4 @@ python scripts/gh-fetch.py raw owner/repo/path.md      # 抓任意公开仓库�
 
 - 方法论：easychen《一人企业方法论》第二版（[easychen/opc-methodology](https://github.com/easychen/opc-methodology)）及其官方 9 技能，本技能为中文蒸馏改写，冲突以官方为准
 - 案例库：[1c7/chinese-independent-developer](https://github.com/1c7/chinese-independent-developer)、[sindresorhus/awesome](https://github.com/sindresorhus/awesome)
-- 出海三步闭环：蒸馏自公众号「coding AI智造副业」《出海赚美分、找点子：三个GitHub武器》
 - 判断关灵感：TypeSafe AI 的 Jev（System One 判断模型）与开源 Laya
