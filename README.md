@@ -19,11 +19,11 @@ git clone https://gh-proxy.com/https://github.com/<你的用户名>/opc-track-la
 # 浏览器打开 https://cdn.jsdelivr.net/gh/<用户名>/opc-track-lab@master/ 按目录逐个另存
 ```
 
-## Jev 判断关：判卷模型配置（双插口 + 通配口）
+## Jev 判断关：判卷模型配置（三插口 + 通配口）
 
-判断关支持**两个原生插口 + 一个通配口**，配置三个环境变量即可，未配置时自动降级「单阅卷」（AI 自判并在卡片标注），**流程永不阻塞**。
+判断关支持**三个原生插口 + 一个通配口**，配置三个环境变量即可，未配置时自动降级「单阅卷」（AI 自判并在卡片标注），**流程永不阻塞**。
 
-> 说明：亲测路线是**插口 A（OpenRouter）**——注册有送额度活动、国内配置成本最低；插口 B/C 均已适配协议但未逐一实测。如果发现了更好的判卷渠道（更便宜、更快、更稳，或本地 Laya 跑通了），**欢迎提 Issue 或 PR** 分享配置，我会把它加进这份说明里。
+> 说明：亲测路线是**插口 A（OpenRouter）**——注册有送额度活动、国内配置成本最低；插口 B（TypeSafe 官方）、插口 C（硅基流动）与通配口均已适配协议但未逐一实测。如果发现了更好的判卷渠道（更便宜、更快、更稳，或本地 Laya 跑通了），**欢迎提 Issue 或 PR** 分享配置，我会把它加进这份说明里。
 
 ### 插口 A · OpenRouter（推荐，本仓库实测路线）
 
@@ -55,6 +55,29 @@ setx OPC_JUDGE_MODEL "按官方文档填模型名"
 ```
 
 > 注：本仓库实测验证的是插口 A；插口 B 的端点与响应以 [docs.typesafe.ai](https://docs.typesafe.ai/api) 为准，如字段有出入可用 `OPC_JUDGE_DECISIONS_PATH` 覆盖路径，或提 Issue 反馈。
+
+### 插口 C · 硅基流动（国内直连，未实测）
+
+国内注册不了 OpenRouter、连不上 TypeSafe 官方时的**替代路线**：硅基流动 2026 年 9 月底上线了「快速决策（TypeSafe）」接口（`POST /v1/systemone`），与 Jev 同一套 state+questions 协议，目前挂了三个开源判断模型：
+
+| 模型 | 底细 |
+| --- | --- |
+| `Kev-4b` | 通义千问 Qwen3.5 微调的 Jev 复刻，API 规范全复现 |
+| `SemIf` | 独立开源实现，社区 98 题实测 82%（Jev 本体同一测试 80%） |
+| `diffusiongemma` | Gemma 系扩散架构改的判断模型，较新 |
+
+活动（以[官方文档](https://docs.siliconflow.cn/docs/api/systemone-post)为准）：Alpha 阶段**输入 token 2026-10-08 前限时免费**，此后如收费将另行通知；输出 token 目前不计费。
+
+1. 注册 [cloud.siliconflow.cn](https://cloud.siliconflow.cn)，在「API 密钥」页新建 Key
+2. 三个变量照旧（脚本已预留硅基流动端点，`OPC_JUDGE_BASE_URL` 指向即自动走 `/v1/systemone`）：
+
+```bat
+setx OPC_JUDGE_BASE_URL "https://api.siliconflow.cn"
+setx OPC_JUDGE_API_KEY "sk-你在硅基流动的key"
+setx OPC_JUDGE_MODEL "Kev-4b"
+```
+
+> **诚实声明：本仓库实测过的只有插口 A。** 插口 C 与 Jev 同协议、脚本已预留接口，但**没有实测过**——响应字段如与 Jev 有出入，可用 `OPC_JUDGE_DECISIONS_PATH` 覆盖或提 Issue。模型名大小写以官方文档为准；想在硅基流动改用普通对话模型当判卷员，加 `setx OPC_JUDGE_API "chat"` 强制 chat 协议即可。另外注意：硅基流动模型广场的筛选面板里没有「判断」分类，这三个模型的入口就是上面的 API 文档页。
 
 ### 通配口 · 其他 OpenAI 兼容接口（chat 协议）
 

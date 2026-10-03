@@ -12,6 +12,8 @@ jev-check.py — Jev 判断关：把"考卷"交给判卷模型复判（双协议
         POST {root}/api/alpha/decisions
      b. TypeSafe 官方直连（https://api.typesafe.ai）：
         POST {base}/v1/decide
+     c. 硅基流动（https://api.siliconflow.cn，Kev-4b/SemIf/diffusiongemma，未实测）：
+        POST {base}/v1/systemone
      body={model, state, questions{...}}，返回 noul(是/否概率)/choice(选项+分布)/score(量表位置+分布)
   2. chat 协议 — 其他 OpenAI 兼容接口（千问 DashScope/豆包方舟/智谱/本地 Laya 网关等）：
      POST {base}/chat/completions，用严格系统提示模拟判卷纪律（温度 0、只答题号和答案）
@@ -73,6 +75,8 @@ def detect_api(base, model):
     m = (model or "").lower()
     if "openrouter" in base and ("jev" in m or "typesafe" in m):
         return "decisions"
+    if "siliconflow" in base:
+        return "decisions"
     return "chat"
 
 
@@ -114,6 +118,10 @@ def decisions_url(base):
         if b.endswith("/api/v1"):
             return b[: -len("/api/v1")] + "/api/alpha/decisions"
         return b + "/api/alpha/decisions"
+    if "siliconflow" in b:
+        if b.endswith("/v1"):
+            b = b[: -len("/v1")]
+        return b + "/v1/systemone"  # 硅基流动「快速决策（TypeSafe）」端点（未实测）
     if "typesafe.ai" in b:
         return b + "/v1/decide"  # TypeSafe 官方直连（以 docs.typesafe.ai 为准）
     return b + "/api/alpha/decisions"
@@ -228,7 +236,7 @@ def main():
     if not (base and key and model):
         print("〔单阅卷模式〕未配置判卷模型（OPC_JUDGE_BASE_URL / OPC_JUDGE_API_KEY / OPC_JUDGE_MODEL）。")
         print("本次判断由 AI 单独完成，判断卡片标注「单阅卷」；流程继续，不受阻塞。")
-        print("配置任意 OpenAI 兼容接口（千问/豆包/智谱）或 OpenRouter-Jev 后自动升级为双阅卷。")
+        print("配置任意 OpenAI 兼容接口（千问/豆包/智谱）、硅基流动或 OpenRouter-Jev 后自动升级为双阅卷。")
         return
 
     with open(args.exam, encoding="utf-8") as f:
